@@ -9,7 +9,7 @@ plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
 plt.rcParams.update({'font.size': 25})
 
 path = './result/'
-file_list = ['PDW1.csv','PDW2.csv']
+file_list = ['PDW2.csv','PDW16.csv']
 # encoding = 'GB18030'
 encoding = 'gb2312'
 # encoding = 'UTF-8'
@@ -84,12 +84,15 @@ for file in file_list:
     plt.legend(loc='upper right')  # 也可以使用 bbox_to_anchor 来微调位置
     plt.show()
 
-    plt.figure(figsize=(40, 20))
-    plt.title(f'{file}')
-    plt.plot(df['到达时间(s)'], df['幅度'], '.', label=f'幅度')
-    # plt.legend()
-    plt.legend(loc='upper right')  # 也可以使用 bbox_to_anchor 来微调位置
-    plt.show()
+    # plt.figure(figsize=(40, 20))
+    # plt.title(f'{file}')
+    # plt.plot(df['到达时间(s)'], df['幅度'], '.', label=f'幅度')
+    # # plt.legend()
+    # plt.legend(loc='upper right')  # 也可以使用 bbox_to_anchor 来微调位置
+    # plt.show()
+
+
+
 
 # print(result)
 

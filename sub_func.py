@@ -4,7 +4,9 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
-
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用SimHei字体
+plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+plt.rcParams.update({'font.size': 25})
 
 def kmeans_cluster(df,feature,radar_type,n):
     X = df[feature].copy()  # 特征
@@ -13,21 +15,22 @@ def kmeans_cluster(df,feature,radar_type,n):
     kmeans.fit(X)
     labels = kmeans.labels_.astype(str)
 
-    centroids = kmeans.cluster_centers_
+    # centroids = kmeans.cluster_centers_
 
     df['labels'] = labels
     # df['雷达型号'] = labels['labels']
     # df = df.drop('labels', axis=1)  # 删除辅助列
 
     # 对'labels'列进行分组并计数
-    label_counts = df['labels'].value_counts()
+    # label_counts = df['labels'].value_counts()
     # 找到出现次数最多的标签
-    least_common_label = label_counts.idxmin()
+    # least_common_label = label_counts.idxmin()
     # 筛选出具有相同标签最多的数据
     # least_common_data = df[df['labels'] == least_common_label]
     # least_common_data['labels'] = radar_type
 
-    df.iloc[df['labels'] == least_common_label,'labels'] = radar_type
+    # df.iloc[df['labels'] == least_common_label,'labels'] = radar_type
+
     # df[df['labels'] == least_common_label]['labels'] = radar_type
 
     return df
@@ -65,7 +68,27 @@ def classifer(input_path,output_path,radar_type,file_list):
     #     df_concat = kmeans_cluster(df_concat, ['脉冲宽度(s)'], radar_type, 2)
 
     df_concat = df_concat.dropna()
-    df_concat = kmeans_cluster(df_concat, ['脉冲宽度(s)'], radar_type, 2)
+    df_concat = kmeans_cluster(df_concat, ['脉冲宽度(s)','频率(Hz)'], radar_type, 2)
+
+    label_list = sorted(df_concat['labels'].unique())
+
+    plt.figure(figsize=(40, 20))
+    # plt.title(f'{file}')
+    for label in label_list:
+        df_label = df_concat[df_concat['labels'] == label]
+        plt.plot(df_label['到达时间(s)'], df_label['频率(Hz)'], '.', label=f'频率(Hz)')
+    plt.legend(loc='upper right')  # 也可以使用 bbox_to_anchor 来微调位置
+    plt.show()
+
+    plt.figure(figsize=(40, 20))
+    # plt.title(f'{file}')
+    for label in label_list:
+        df_label = df_concat[df_concat['labels'] == label]
+        plt.plot(df_label['到达时间(s)'], df_label['脉冲宽度(s)'], '.', label=f'频率(Hz)')
+    plt.legend(loc='upper right')  # 也可以使用 bbox_to_anchor 来微调位置
+    plt.show()
+
+
 
     for file in file_list:
         df_single = df_concat[df_concat['source'] == file]
@@ -76,6 +99,7 @@ def classifer(input_path,output_path,radar_type,file_list):
         #
         # df_single.to_csv(output_path + file, encoding='gb2312',index=False)
         # print(f'    {output_path}{file} done')
+
 
 def add__columns(input_path,output_path,file_list):
     for file in file_list:

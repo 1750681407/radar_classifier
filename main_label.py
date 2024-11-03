@@ -1,7 +1,13 @@
 import pandas as pd
 import warnings
+
+from matplotlib import pyplot as plt
+
 from sub_func import classifer, add__columns
 warnings.filterwarnings('ignore')
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用SimHei字体
+plt.rcParams['axes.unicode_minus'] = False  # 正确显示负号
+plt.rcParams.update({'font.size': 25})
 
 if __name__ == '__main__':
 
@@ -11,7 +17,8 @@ if __name__ == '__main__':
 
     df = pd.read_csv(input_path + 'Train_Taget.csv', encoding='gb2312')
     radar_types_list = sorted(df['雷达型号'].unique())
-    radar_types_list = [i for i in range(2,3)]
+    # radar_types_list = [i for i in range(2,3)]
+    radar_types_list = [1]
     print(radar_types_list)
 
     # file_list = ['PDW' + str(element) + '.csv' for element in range(1,31)]  # 每个雷达型号对应的文件
@@ -20,7 +27,8 @@ if __name__ == '__main__':
     for radar_type in radar_types_list:
         df_radar = df[df['雷达型号'] == radar_type]
         env_list = sorted(df_radar['场景'].unique())
-        n = df_radar
+
+        # n = df_radar
         file_list = ['PDW' + str(element) + '.csv' for element in env_list]#每个雷达型号对应的文件
         print(f'{radar_type}:{file_list}')
         classifer(input_path,output_path,radar_type,file_list)
